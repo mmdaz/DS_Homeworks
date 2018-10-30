@@ -3,21 +3,29 @@ class Stack:
     def __init__(self):
         self.stack = list()
         self.indexes = list()
+        self.result = 0
 
     def push(self, parentheses):
-        if parentheses == "(":
-            self.stack.append(parentheses)
-        else:
-            i_mi = []
+        self.stack.append(parentheses)
+
+    def pop(self):
+        self.stack.pop()
+        self.result += 1
+        if len(self.stack) == 0:
+            # self.result = self.result * 2 -1
+            self.indexes.append(self.result)
+            self.result = 0
 
 
+stack = Stack()
+n = int(input())
 phrase = input()
 
-counter = 0
-m_indexes = list()
-indexes = list()
-stack = list()
-for c in phrase[1:]:
+for c in phrase:
+    if c == "(":
+        stack.push(c)
+        # print(stack.stack)
+    else:
+        stack.pop()
 
-
-print(m_indexes)
+print(2 * max(stack.indexes) - 1)
