@@ -1,86 +1,57 @@
 import heapq
 
-
-class Node:
-    def __init__(self, data, left, right):
-        self.data = data
-        self.left = left
-        self.right = right
-
-
-class Stack:
-    def __init__(self, stack_index, nodes):
-        self.stack_index = stack_index
-        self.nodes = nodes
-
-    def pop(self):
-        if self.stack_index > 0 and self.nodes:
-            return_value = self.nodes[self.stack_index]
-            self.stack_index -= 1
-            return return_value
-
-    def push(self, node):
-        self.stack_index += 1
-        self.nodes.append(node)
+left_count = 0
 
 
 class Binary_Search_Tree:
-    def __init__(self, keys):
-        self.node = None
-        self.keys = keys
+    def __init__(self, data):
+        self.data = data
+        self.right = None
+        self.left = None
+        # self.left_count = left_count
 
-        for k in keys:
-            new_node = Node(k, None, None)
-            self.insert_node(new_node)
-
-    def insert_node(self, node):
-
-        pTraverse = self.node
-        currentParent = self.node
-
-        while pTraverse:
-            currentParent = pTraverse
-            if node.data < pTraverse.data:
-                pTraverse = pTraverse.left
-            else:
-                pTraverse = pTraverse.right
-
-        if not currentParent:
-            # print("slam")
-            self.node = node
-
-        elif node.data < currentParent.data:
-            currentParent.left = node
+    def insert_tree(self, x):
+        # print("l : {}".format(self.left_count))
+        if self.data:
+            if x <= self.data:
+                if self.left is None:
+                    global left_count
+                    left_count += 1
+                    self.left = Binary_Search_Tree(data=x)
+                else:
+                    self.left.insert_tree(x=x)
+            elif x > self.data:
+                if self.right is None:
+                    self.right = Binary_Search_Tree(data=x)
+                else:
+                    self.right.insert_tree(x=x)
         else:
-            currentParent.right = node
+            self.data = x
 
-    def k_smallest(self, k):
-        stack = Stack(0, [0])
-        pCrowl = self.node
+    def k_th_smallest_data(self, k):
 
-        while pCrowl:
-            stack.push(pCrowl)
-            pCrowl = pCrowl.left
+        pTraverse = self.data
+        global left_count
+        print(str(k) + "k")
+        # print(str(left_count) + "dfg")
+        while self.data:
+            print(self.data + "sdf")
+            if left_count + 1 == k:
+                print("salam")
+                return self.data
+            elif k > left_count:
+                k = k - (left_count + 1)
+                self.data = self.right
+            else:
+                self.data = self.left
 
-        print(stack.nodes)
+    def print_tree(self):
+        if self.left:
+            self.left.print_tree()
+        print(self.data),
+        if self.right:
+            self.right.print_tree()
 
-        while True:
-            pCrowl = stack.pop()
-
-            if not pCrowl:
-                break
-
-            k -= 1
-            if k == 0:
-                break
-
-            if pCrowl.right:
-                pCrowl = pCrowl.right
-                while pCrowl:
-                    stack.push(pCrowl)
-                    pCrowl = pCrowl.left
-
-        return pCrowl
 
 n = int(input())
 
@@ -90,17 +61,20 @@ row_inputs = list()
 for i in range(10):
     row_inputs.append(input())
 
+bst = Binary_Search_Tree(data=None)
+counter = 0
 for row_input in row_inputs:
     command = row_input.split(" ")[0]
     if int(command) == 1:
         vote = row_input.split(" ")[1]
-        numbers.append(int(vote))
+        counter += 1
+        bst.insert_tree(vote)
 
     else:
-        l = len(numbers)
-        if l < 3:
+        if counter < 3:
             print("No reviews yet")
         else:
-            bst = Binary_Search_Tree(numbers)
-            print(bst.k_smallest(l/3))
-# print(numbers)
+            print(bst.k_th_smallest_data(int(counter / 3)))
+
+# bst.print_tree()
+# print(bst.left_count)
