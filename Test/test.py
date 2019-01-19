@@ -1,5 +1,2 @@
-from collections import deque
-
-q = deque([1,2,3,4])
-# print(q.pop())
-q.appendleft(5)
+for value in range(1, 10, -1):
+    print(value)
